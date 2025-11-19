@@ -136,10 +136,12 @@ def cutlass_block_fp8_supported() -> bool:
 
 
 CUTLASS_BLOCK_FP8_SUPPORTED = cutlass_block_fp8_supported()
-ENABLE_FLASHINFER_FP8_GEMM = (
+
+FLASHINFER_FP8_GEMM_SUPPORTED = is_blackwell_supported() and is_flashinfer_available()
+
+ENABLE_FLASHINFER_FP8_GEMM = FLASHINFER_FP8_GEMM_SUPPORTED and (
     envs.SGLANG_ENABLE_FLASHINFER_FP8_GEMM.get()
-    and is_blackwell_supported()
-    and is_flashinfer_available()
+    or not deep_gemm_wrapper.ENABLE_JIT_DEEPGEMM
 )
 if ENABLE_FLASHINFER_FP8_GEMM:
     from flashinfer.gemm import gemm_fp8_nt_groupwise
