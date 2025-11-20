@@ -141,7 +141,10 @@ FLASHINFER_FP8_GEMM_SUPPORTED = is_sm100_supported() and is_flashinfer_available
 
 ENABLE_FLASHINFER_FP8_GEMM = FLASHINFER_FP8_GEMM_SUPPORTED and (
     envs.SGLANG_ENABLE_FLASHINFER_FP8_GEMM.get()
-    or (not CUTLASS_BLOCK_FP8_SUPPORTED and not deep_gemm_wrapper.ENABLE_JIT_DEEPGEMM)
+    or (
+        not deep_gemm_wrapper.ENABLE_JIT_DEEPGEMM
+        and not envs.SGLANG_SUPPORT_CUTLASS_BLOCK_FP8.is_set()
+    )
 )
 if ENABLE_FLASHINFER_FP8_GEMM:
     from flashinfer.gemm import gemm_fp8_nt_groupwise
