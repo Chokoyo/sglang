@@ -32,6 +32,7 @@ from sglang.srt.utils import (
     get_bool_env_var,
     get_cuda_version,
     get_device_capability,
+    get_device_sm,
     is_cuda,
     is_flashinfer_available,
     is_hip,
@@ -127,11 +128,9 @@ def cutlass_block_fp8_supported() -> bool:
     if not get_bool_env_var("SGLANG_SUPPORT_CUTLASS_BLOCK_FP8"):
         return False
     if _is_cuda:
-        major, minor = torch.cuda.get_device_capability()
-        sm_version = major * 10 + minor
-        cuda_version = tuple(map(int, torch.version.cuda.split(".")))
-        if cuda_version >= (12, 0) and sm_version >= 90:
-            return True
+        sm_version = get_device_sm()
+        cuda_version = get_cuda_version()
+        return cuda_version >= (12, 0) and sm_version >= 90
     return False
 
 
