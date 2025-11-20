@@ -6,7 +6,7 @@ from sglang.srt.environ import envs
 from sglang.srt.layers import deep_gemm_wrapper
 from sglang.srt.layers.quantization.fp8_kernel import sglang_per_token_group_quant_fp8
 from sglang.srt.layers.quantization.mxfp4_tensor import MXFP4QuantizeUtil
-from sglang.srt.utils import ceil_div, is_sm100_supported, offloader
+from sglang.srt.utils import ceil_div, offloader
 
 try:
     from vllm import _custom_ops as ops
@@ -33,6 +33,7 @@ from sglang.srt.utils import (
     get_cuda_version,
     get_device_capability,
     get_device_sm,
+    is_blackwell_supported,
     is_cuda,
     is_flashinfer_available,
     is_hip,
@@ -136,7 +137,7 @@ def cutlass_block_fp8_supported() -> bool:
 
 CUTLASS_BLOCK_FP8_SUPPORTED = cutlass_block_fp8_supported()
 
-FLASHINFER_FP8_GEMM_SUPPORTED = is_sm100_supported() and is_flashinfer_available()
+FLASHINFER_FP8_GEMM_SUPPORTED = is_blackwell_supported() and is_flashinfer_available()
 
 ENABLE_FLASHINFER_FP8_GEMM = FLASHINFER_FP8_GEMM_SUPPORTED and (
     envs.SGLANG_ENABLE_FLASHINFER_FP8_GEMM.get()
