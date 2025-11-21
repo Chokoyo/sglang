@@ -428,7 +428,6 @@ class RadixCache(BasePrefixCache):
         # `req.prefix_indices` will be used in `PrefillAdder::add_chunked_req` later
         # - page_size != 1: there is a partial page at the end, keep the full kv_indices
         # - eagle case: bigram keys will only cache len - 1 kv indices
-        assert not self.is_eagle or self.is_eagle and len(token_ids) == len(keys) + 1
         if len(new_indices) < len(kv_indices):
             req.prefix_indices = torch.cat(
                 [new_indices, kv_indices[len(new_indices) :]]
